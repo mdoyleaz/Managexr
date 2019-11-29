@@ -17,6 +17,11 @@ config :managexr, ManagexrWeb.Endpoint,
   render_errors: [view: ManagexrWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: Managexr.PubSub, adapter: Phoenix.PubSub.PG2]
 
+# Guardian Config
+config :managexr, Managexr.Accounts.Guardian,
+  issuer: "managexr",
+  secret_key: "7MebKn6qOWX18OetI6OAQB8R7aAiRVpbPUcmdB3M6jk1uSZi6rhUhnSaxMYdUg77"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

@@ -40,7 +40,11 @@ defmodule Managexr.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+
+      ## Auth ##
+      {:argon2_elixir, "~> 2.1"},
+      {:guardian, "~> 2.0"}
     ]
   end
 
