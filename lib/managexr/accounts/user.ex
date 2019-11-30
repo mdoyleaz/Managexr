@@ -1,12 +1,14 @@
 defmodule Managexr.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias __MODULE__
-
   import Argon2, only: [hash_pwd_salt: 1]
+
+  alias __MODULE__
+  alias Managexr.Auth.AuthToken
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "users" do
+    has_many :auth_tokens, AuthToken
     field :email, :string
     field :password_hash, :string
 

@@ -2,7 +2,6 @@ defmodule Managexr.Accounts do
   @moduledoc """
   The Accounts context.
   """
-  alias Argon2
   import Ecto.Query, warn: false
 
   alias Managexr.Repo

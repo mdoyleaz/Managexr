@@ -31,4 +31,10 @@ defmodule ManagexrWeb.FallbackController do
     |> put_status(:unauthorized)
     |> json(%{error: "login_failed"})
   end
+
+  def call(conn, {:error, :invalid_token}) do
+    conn
+    |> put_status(:not_found)
+    |> json(%{error: "invalid_token"})
+  end
 end

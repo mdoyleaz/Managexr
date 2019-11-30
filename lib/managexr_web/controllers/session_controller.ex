@@ -1,27 +1,24 @@
 defmodule ManagexrWeb.SessionController do
   use ManagexrWeb, :controller
 
-  alias Managexr.Auth.Guardian
+  alias Managexr.Auth
 
   action_fallback ManagexrWeb.FallbackController
 
-  def sign_in(conn, %{"email" => _, "password" => _} = user) do
-    case Guardian.authenticate_user(user) do
-      {:ok, user} ->
-        token =
-          Guardian.Plug.sign_in(conn, user)
-          |> Guardian.Plug.current_token()
-
-        render(conn, "auth_token.json", auth_token: token)
+  def create(conn, %{"email" => _, "password" => _} = user) do
+    case Auth.sign_in(user) do
+      {:ok, auth_token} ->
+        render(conn, "auth_token.json", auth_token: auth_token.token)
 
       error ->
         error
     end
   end
 
-  def sign_out(conn, _) do
-    conn
-    |> Guardian.Plug.sign_out()
-    |> json(%{success: "logged_out"})
+  def delete(conn, _) do
+    case Auth.sign_out(conn) do
+      {:ok, _} -> send_resp(conn, 204, "")
+      error -> error
+    end
   end
 end
