@@ -21,8 +21,7 @@ defmodule ManagexrWeb.SessionController do
 
   def sign_out(conn, _) do
     conn
-    |> Guardian.Plug.current_claims()
-    |> IO.inspect()
+    |> Guardian.Plug.sign_out()
     |> json(%{success: "logged_out"})
   end
 end

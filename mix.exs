@@ -42,9 +42,10 @@ defmodule Managexr.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
 
-      ## Auth ##
+      ## Auth
       {:argon2_elixir, "~> 2.1"},
-      {:guardian, "~> 2.0"}
+      {:guardian, "~> 2.0"},
+      {:guardian_db, "~> 2.0"}
     ]
   end
 

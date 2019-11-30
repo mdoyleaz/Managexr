@@ -19,8 +19,16 @@ config :managexr, ManagexrWeb.Endpoint,
 
 # Guardian Config
 config :managexr, Managexr.Auth.Guardian,
+  ttl: {30, :days},
   issuer: "managexr",
+  verify_issuer: true,
+  verify_module: Guardian.JWT,
   secret_key: "7MebKn6qOWX18OetI6OAQB8R7aAiRVpbPUcmdB3M6jk1uSZi6rhUhnSaxMYdUg77"
+
+# Guardian DB Config
+config :guardian, Guardian.DB,
+  repo: Managexr.Repo,
+  schema_name: "guardian_tokens"
 
 # Configures Elixir's Logger
 config :logger, :console,
