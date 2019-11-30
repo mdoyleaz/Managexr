@@ -1,22 +1,19 @@
 defmodule ManagexrWeb.Router do
   use ManagexrWeb, :router
 
-  alias Managexr.Guardian
-
   pipeline :api do
     plug :accepts, ["json"]
   end
 
   pipeline :auth do
-    plug Guardian.AuthPipeline
+    plug Managexr.Guardian.AuthPipeline
   end
 
   scope "/api/v1", ManagexrWeb do
     pipe_through :api
 
     scope "/auth" do
-      post "/sign_in", Accounts.AuthController, :sign_in
-      post "/sign_out", Accounts.AuthController, :sign_out
+      post "/signin", SessionController, :sign_in
     end
   end
 
@@ -28,5 +25,7 @@ defmodule ManagexrWeb.Router do
       get "/", Accounts.UserController, :index
       post "/create_user", Accounts.UserController, :create
     end
+
+    delete "/auth/signout", SessionController, :sign_out
   end
 end
