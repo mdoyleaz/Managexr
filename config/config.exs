@@ -18,7 +18,7 @@ config :managexr, ManagexrWeb.Endpoint,
   pubsub: [name: Managexr.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Guardian Config
-config :managexr, Managexr.Accounts.Guardian,
+config :managexr, Managexr.Auth.Guardian,
   issuer: "managexr",
   secret_key: "7MebKn6qOWX18OetI6OAQB8R7aAiRVpbPUcmdB3M6jk1uSZi6rhUhnSaxMYdUg77"
 

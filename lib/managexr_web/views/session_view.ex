@@ -1,4 +1,4 @@
-defmodule ManagexrWeb.Accounts.AuthView do
+defmodule ManagexrWeb.SessionView do
   use ManagexrWeb, :view
 
   def render("auth_token.json", %{auth_token: token}) do

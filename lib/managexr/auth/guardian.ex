@@ -1,6 +1,16 @@
-defmodule Managexr.Accounts.Auth do
+defmodule Managexr.Auth.Guardian do
+  use Guardian, otp_app: :managexr
+
   alias Managexr.Accounts
-  alias Managexr.Accounts.Guardian
+
+  def subject_for_token(resource, _claims), do: {:ok, resource.id}
+
+  def resource_from_claims(claims) do
+    case Accounts.get_user(claims["sub"]) do
+      nil -> {:error, :resource_not_found}
+      user -> {:ok, user}
+    end
+  end
 
   def authenticate_user(%{"email" => email, "password" => password}) do
     case Accounts.get_user_by_email(email) do
@@ -14,6 +24,6 @@ defmodule Managexr.Accounts.Auth do
     end
   end
 
-  defp check_password_verification(true, user), do: user |> Guardian.encode_and_sign()
+  defp check_password_verification(true, user), do: {:ok, user}
   defp check_password_verification(_, _), do: {:error, :unauthorized}
 end
