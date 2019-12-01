@@ -29,7 +29,7 @@ defmodule Managexr.Auth do
   defp check_password_verification(_, _), do: {:error, :unauthorized}
 
   def sign_out(conn) do
-    case Authenticator.get_token(conn) do
+    case Authenticator.parse_token(conn) do
       {:ok, token} ->
         get_token(token)
         |> delete_token()

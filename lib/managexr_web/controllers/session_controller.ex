@@ -18,7 +18,7 @@ defmodule ManagexrWeb.SessionController do
   def delete(conn, _) do
     case Auth.sign_out(conn) do
       {:ok, _} -> send_resp(conn, 204, "")
-      error -> error
+      error -> error |> IO.inspect()
     end
   end
 end

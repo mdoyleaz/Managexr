@@ -11,6 +11,6 @@ defmodule ManagexrWeb.Accounts.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{data: %{id: user.id, email: user.email}}
+    %{id: user.id, email: user.email}
   end
 end

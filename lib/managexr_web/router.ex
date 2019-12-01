@@ -13,8 +13,8 @@ defmodule ManagexrWeb.Router do
     pipe_through :api
 
     scope "/auth" do
-      post "/auth/signin", SessionController, :create
-      delete "/auth/signout", SessionController, :delete
+      post "/signin", SessionController, :create
+      delete "/signout", SessionController, :delete
     end
   end
 

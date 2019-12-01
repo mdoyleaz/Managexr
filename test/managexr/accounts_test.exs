@@ -7,10 +7,10 @@ defmodule Managexr.AccountsTest do
   describe "users" do
     alias Managexr.Accounts.User
 
-    @valid_attrs %{email: "some_email@example.com", password: "some password_hash"}
+    @valid_attrs %{email: "test_email@example.com", password: "test_password"}
     @update_attrs %{
       email: "some_updated_email@example.com",
-      password: "some updated password_hash"
+      password: "some updated password"
     }
     @invalid_attrs %{email: nil, password: nil}
 
@@ -33,10 +33,15 @@ defmodule Managexr.AccountsTest do
       assert Accounts.get_user!(user.id) == user
     end
 
+    test "get_user_by_email/1 returns a user based on the email address provided" do
+      user = user_fixture()
+      assert Accounts.get_user_by_email(user.email) == user
+    end
+
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert {:ok, user} == Argon2.check_pass(user, "some password", hash_key: :password)
-      assert user.email == "some@example.com"
+      assert {:ok, user} == Argon2.check_pass(user, "test_password", hash_key: :password_hash)
+      assert user.email == "test_email@example.com"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -46,8 +51,11 @@ defmodule Managexr.AccountsTest do
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert {:ok, user} == Argon2.check_pass(user, "some updated password", hash_key: :password)
-      assert user.email == "email@example.com"
+
+      assert {:ok, user} ==
+               Argon2.check_pass(user, "some updated password", hash_key: :password_hash)
+
+      assert user.email == "some_updated_email@example.com"
     end
 
     test "update_user/2 with invalid data returns error changeset" do

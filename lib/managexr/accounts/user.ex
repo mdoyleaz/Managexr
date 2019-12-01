@@ -27,6 +27,7 @@ defmodule Managexr.Accounts.User do
     |> validate_confirmation(:password)
     |> unique_constraint(:email)
     |> hash_password
+    |> set_password_to_nil
   end
 
   defp hash_password(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
@@ -34,4 +35,8 @@ defmodule Managexr.Accounts.User do
   end
 
   defp hash_password(changeset), do: changeset
+
+  defp set_password_to_nil(changeset) do
+    put_change(changeset, :password, nil)
+  end
 end
