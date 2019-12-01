@@ -6,7 +6,16 @@ defmodule Managexr.Application do
   def start(_type, _args) do
     children = [
       Managexr.Repo,
-      ManagexrWeb.Endpoint
+      ManagexrWeb.Endpoint,
+      {ConCache,
+       [
+         name: :session_cache,
+         ttl_check_interval: :timer.seconds(30),
+         global_ttl: :timer.minutes(60),
+         touch_on_read: true,
+         write_concurrency: true,
+         read_concurrency: true
+       ]}
     ]
 
     opts = [strategy: :one_for_one, name: Managexr.Supervisor]

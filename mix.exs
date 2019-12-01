@@ -20,7 +20,7 @@ defmodule Managexr.MixProject do
   def application do
     [
       mod: {Managexr.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :con_cache]
     ]
   end
 
@@ -43,7 +43,10 @@ defmodule Managexr.MixProject do
       {:plug_cowboy, "~> 2.0"},
 
       ## Auth
-      {:argon2_elixir, "~> 2.1"}
+      {:argon2_elixir, "~> 2.1"},
+
+      ## Cache
+      {:con_cache, "~> 0.14.0"}
     ]
   end
 

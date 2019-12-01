@@ -6,7 +6,6 @@ defmodule Managexr.Auth do
   alias Managexr.Auth.Authenticator
 
   def get_token(token), do: Repo.get_by(AuthToken, %{token: token})
-
   def get_token_by_user(token), do: get_token(token) |> Repo.preload(:user)
 
   def sign_in(%{"email" => email, "password" => password}) do
@@ -17,16 +16,18 @@ defmodule Managexr.Auth do
 
       user ->
         Argon2.verify_pass(password, user.password_hash)
-        |> check_password_verification(user)
+        |> store_token(user)
     end
   end
 
-  defp check_password_verification(true, user) do
+  defp store_token(false, _), do: {:error, :unauthorized}
+
+  defp store_token(true, user) do
     token = Authenticator.generate_token(user)
+
+    ConCache.put(:session_cache, token, user)
     Repo.insert(Ecto.build_assoc(user, :auth_tokens, %{token: token}))
   end
-
-  defp check_password_verification(_, _), do: {:error, :unauthorized}
 
   def sign_out(conn) do
     case Authenticator.parse_token(conn) do
@@ -40,5 +41,9 @@ defmodule Managexr.Auth do
   end
 
   defp delete_token(nil), do: {:error, :invalid_token}
-  defp delete_token(auth_token), do: Repo.delete(auth_token)
+
+  defp delete_token(auth_token) do
+    ConCache.delete(:session_cache, auth_token.token)
+    Repo.delete(auth_token)
+  end
 end
