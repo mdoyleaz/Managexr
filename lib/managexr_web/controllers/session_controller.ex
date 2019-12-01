@@ -8,7 +8,7 @@ defmodule ManagexrWeb.SessionController do
   def create(conn, %{"email" => _, "password" => _} = user) do
     case Auth.sign_in(user) do
       {:ok, auth_token} ->
-        render(conn, "auth_token.json", auth_token: auth_token.token)
+        render(conn, "auth_token.json", auth_token: auth_token)
 
       error ->
         error

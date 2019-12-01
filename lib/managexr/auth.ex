@@ -5,6 +5,10 @@ defmodule Managexr.Auth do
   alias Managexr.Auth.AuthToken
   alias Managexr.Auth.Authenticator
 
+  def get_token(token), do: Repo.get_by(AuthToken, %{token: token})
+
+  def get_token_by_user(token), do: get_token(token) |> Repo.preload(:user)
+
   def sign_in(%{"email" => email, "password" => password}) do
     case Accounts.get_user_by_email(email) do
       nil ->
@@ -27,7 +31,7 @@ defmodule Managexr.Auth do
   def sign_out(conn) do
     case Authenticator.get_token(conn) do
       {:ok, token} ->
-        Repo.get_by(AuthToken, %{token: token})
+        get_token(token)
         |> delete_token()
 
       error ->

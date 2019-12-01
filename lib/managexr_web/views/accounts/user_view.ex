@@ -11,10 +11,6 @@ defmodule ManagexrWeb.Accounts.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{id: user.id, email: user.email}
-  end
-
-  def render("auth_token.json", %{auth_token: token}) do
-    %{auth_token: token}
+    %{data: %{id: user.id, email: user.email}}
   end
 end

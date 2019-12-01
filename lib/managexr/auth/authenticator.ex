@@ -13,7 +13,7 @@ defmodule Managexr.Auth.Authenticator do
     end
   end
 
-  def get_token(conn) do
+  def parse_token(conn) do
     case extract_token(conn) do
       {:ok, token} -> verify_token(token)
       error -> error
