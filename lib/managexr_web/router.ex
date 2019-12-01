@@ -22,9 +22,6 @@ defmodule ManagexrWeb.Router do
   scope "/api/v1", ManagexrWeb do
     pipe_through [:api, :auth]
 
-    scope "/accounts" do
-      get "/", Accounts.UserController, :index
-      post "/create_user", Accounts.UserController, :create
-    end
+    resources "/accounts", Accounts.UserController
   end
 end

@@ -8,7 +8,7 @@ defmodule ManagexrWeb.Plugs.Authenticate do
   def call(conn, _default) do
     case Managexr.Auth.Authenticator.parse_token(conn) do
       {:ok, token} ->
-        case(Auth.get_token_by_user(token)) do
+        case Auth.get_token_by_user(token) do
           nil -> unauthorized(conn)
           auth_token -> authorized(conn, auth_token.user)
         end
