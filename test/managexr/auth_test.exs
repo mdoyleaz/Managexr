@@ -59,6 +59,6 @@ defmodule Managexr.AuthTest do
     token = "test_token"
     conn = conn_fixture(token)
 
-    assert {:error, :invalid} == Auth.sign_out(conn)
+    assert {:error, :invalid_token} == Auth.sign_out(conn)
   end
 end

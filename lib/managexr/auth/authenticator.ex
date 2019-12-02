@@ -9,7 +9,7 @@ defmodule Managexr.Auth.Authenticator do
   def verify_token(token) do
     case Phoenix.Token.verify(@secret, @seed, token, max_age: 86400) do
       {:ok, _} -> {:ok, token}
-      error -> error
+      {:error, _} -> {:error, :invalid_token}
     end
   end
 
