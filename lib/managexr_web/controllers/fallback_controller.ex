@@ -37,4 +37,10 @@ defmodule ManagexrWeb.FallbackController do
     |> put_status(:not_found)
     |> json(%{error: "invalid_token"})
   end
+
+  def call(conn, {:error, :revoked}) do
+    conn
+    |> put_status(:not_found)
+    |> json(%{error: "no_tokens_revoked"})
+  end
 end

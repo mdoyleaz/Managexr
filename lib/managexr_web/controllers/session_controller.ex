@@ -18,4 +18,14 @@ defmodule ManagexrWeb.SessionController do
       error -> error
     end
   end
+
+  def revoke_tokens(conn, _) do
+    case Auth.revoke_tokens_by_user_id(conn) do
+      {count, _} when count > 0 ->
+        render(conn, "revoked.json", revoked: count)
+
+      _ ->
+        {:error, :revoked}
+    end
+  end
 end

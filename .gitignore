@@ -30,3 +30,5 @@ managexr-*.tar
 
 # Elixir_ls
 .elixir_ls/
+
+.mix_tasks

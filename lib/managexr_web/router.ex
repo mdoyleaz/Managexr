@@ -23,5 +23,7 @@ defmodule ManagexrWeb.Router do
     pipe_through [:api, :auth]
 
     resources "/accounts", Accounts.UserController
+
+    put "/auth/revoke", SessionController, :revoke_tokens
   end
 end
