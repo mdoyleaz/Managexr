@@ -8,6 +8,8 @@ defmodule Managexr.Auth do
   alias Managexr.Auth.SessionCache
   alias Managexr.Auth.Authenticator
 
+  @invalid_token {:error, :invalid_token}
+
   def sign_in(%{"email" => email, "password" => password}) do
     case Accounts.get_user_by_email(email) do
       nil ->
@@ -20,7 +22,7 @@ defmodule Managexr.Auth do
     end
   end
 
-  defp store_token(false, _), do: {:error, :unauthorized}
+  defp store_token(false, _), do: @invalid_token
 
   defp store_token(true, user) do
     token = Authenticator.generate_token(%{user_id: user.id, email: user.email, role: "Admin"})
@@ -28,7 +30,6 @@ defmodule Managexr.Auth do
     SessionCache.add_session(%{token: token, user: user})
 
     Repo.insert(Ecto.build_assoc(user, :auth_tokens, %{token: token}))
-    |> IO.inspect()
   end
 
   def sign_out(conn) do
@@ -45,7 +46,7 @@ defmodule Managexr.Auth do
   def get_token(token), do: Repo.get_by(AuthToken, %{token: token})
   def get_token_with_user(token), do: get_token(token) |> Repo.preload(:user)
 
-  defp delete_token(nil), do: {:error, :invalid_token}
+  defp delete_token(nil), do: @invalid_token
 
   defp delete_token(%{token: token} = auth_token) do
     SessionCache.delete_session(token)
@@ -53,25 +54,25 @@ defmodule Managexr.Auth do
   end
 
   def verify_session(conn) do
-    with {:ok, token} <- Authenticator.parse_token(conn),
-         cached_session <- SessionCache.get_session(token) do
-      case cached_session do
+    with {:ok, token} <- Authenticator.parse_token(conn) do
+      case SessionCache.get_session(token) do
         nil -> verify_session_with_database(token)
-        _ -> cached_session
+        session -> session
       end
     else
-      error -> error
+      _ -> @invalid_token
     end
   end
 
   defp verify_session_with_database(token) do
     case get_token_with_user(token) do
-      nil ->
-        :error
-
-      session ->
+      %{revoked: revoked} = session when not revoked ->
+        IO.inspect(revoked, label: "revoked:::")
         SessionCache.add_session(session)
         session
+
+      _ ->
+        @invalid_token
     end
   end
 

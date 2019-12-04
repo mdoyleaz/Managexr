@@ -7,11 +7,10 @@ defmodule ManagexrWeb.Plugs.Authenticate do
 
   def call(conn, _default) do
     case Auth.verify_session(conn) do
-      :error ->
+      {:error, _} ->
         unauthorized(conn)
 
       session ->
-        # IO.inspect(session)
         authorized(conn, session)
     end
   end
