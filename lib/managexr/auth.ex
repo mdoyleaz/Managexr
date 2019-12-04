@@ -22,16 +22,6 @@ defmodule Managexr.Auth do
     end
   end
 
-  defp store_token(false, _), do: @invalid_token
-
-  defp store_token(true, user) do
-    token = Authenticator.generate_token(%{user_id: user.id, email: user.email, role: "Admin"})
-
-    SessionCache.add_session(%{token: token, user: user})
-
-    Repo.insert(Ecto.build_assoc(user, :auth_tokens, %{token: token}))
-  end
-
   def sign_out(conn) do
     case Authenticator.parse_token(conn) do
       {:ok, token} ->
@@ -43,8 +33,8 @@ defmodule Managexr.Auth do
     end
   end
 
-  def get_token(token), do: Repo.get_by(AuthToken, %{token: token})
-  def get_token_with_user(token), do: get_token(token) |> Repo.preload(:user)
+  def get_token(token),
+    do: Repo.get_by(AuthToken, %{token: token}) |> Repo.preload(:user)
 
   defp delete_token(nil), do: @invalid_token
 
@@ -53,21 +43,34 @@ defmodule Managexr.Auth do
     Repo.delete(auth_token)
   end
 
+  defp store_token(true, user) do
+    token = Authenticator.generate_token(%{user_id: user.id, email: user.email, role: "Admin"})
+
+    SessionCache.add_session(%{token: token, user: user})
+
+    Repo.insert(Ecto.build_assoc(user, :auth_tokens, %{token: token}))
+  end
+
+  defp store_token(false, _), do: @invalid_token
+
+  defp get_session(token) do
+    case SessionCache.get_session(token) do
+      nil -> verify_session_with_database(token)
+      session -> session
+    end
+  end
+
   def verify_session(conn) do
     with {:ok, token} <- Authenticator.parse_token(conn) do
-      case SessionCache.get_session(token) do
-        nil -> verify_session_with_database(token)
-        session -> session
-      end
+      get_session(token)
     else
       _ -> @invalid_token
     end
   end
 
   defp verify_session_with_database(token) do
-    case get_token_with_user(token) do
+    case get_token(token) do
       %{revoked: revoked} = session when not revoked ->
-        IO.inspect(revoked, label: "revoked:::")
         SessionCache.add_session(session)
         session
 
