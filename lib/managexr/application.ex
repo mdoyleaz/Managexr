@@ -7,6 +7,7 @@ defmodule Managexr.Application do
     children = [
       Managexr.Repo,
       ManagexrWeb.Endpoint,
+      Managexr.Auth.Sessions.Supervisor,
       {ConCache,
        [
          name: :session_cache,

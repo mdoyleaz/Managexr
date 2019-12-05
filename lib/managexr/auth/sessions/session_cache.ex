@@ -1,4 +1,4 @@
-defmodule Managexr.Auth.SessionCache do
+defmodule Managexr.Auth.Sessions.SessionCache do
   @table :session_cache
   def add_session(%{token: token, user: user}), do: ConCache.put(@table, token, user)
 
