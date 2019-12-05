@@ -27,6 +27,11 @@ config :managexr, ManagexrWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base
 
+config :managexr, :authenticator,
+  secret: System.get_env("AUTH_TOKEN_SECRET",
+  seed: "user token"
+
+
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix

@@ -55,3 +55,7 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :managexr, :authenticator,
+  secret: "IsRSFI9aV8ZKAgKhvQN6ELmIenx-VR",
+  seed: "user token"

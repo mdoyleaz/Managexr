@@ -7,7 +7,7 @@ defmodule Managexr.Auth.Sessions.Supervisor do
 
   def init(:ok) do
     children = [
-      Managexr.Auth.Sessions.SweeperServer
+      Managexr.Auth.Sessions.Sweeper.SweeperServer
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

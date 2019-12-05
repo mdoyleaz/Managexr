@@ -1,6 +1,6 @@
 defmodule Managexr.Auth.Authenticator do
-  @seed "user token"
-  @secret "IsRSFI9aV8ZKAgKhvQN6ELmIenx-VR"
+  @secret Application.get_env(:managexr, :authenticator)[:secret]
+  @seed Application.get_env(:managexr, :authenticator)[:seed]
 
   @missing_token {:error, :missing_token}
   def generate_token(id) do
