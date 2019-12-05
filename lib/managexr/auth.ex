@@ -5,7 +5,7 @@ defmodule Managexr.Auth do
 
   alias Managexr.Accounts
   alias Managexr.Auth.AuthToken
-  alias Managexr.Auth.Sessions.SessionCache
+  alias Managexr.Auth.SessionCache
   alias Managexr.Auth.Authenticator
 
   @invalid_token {:error, :invalid_token}

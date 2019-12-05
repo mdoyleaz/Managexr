@@ -1,4 +1,4 @@
-defmodule Managexr.Auth.Sessions.Sweeper.Sweeper do
+defmodule Managexr.Auth.Sweeper.Sweeper do
   alias Managexr.Auth.AuthToken
 
   def sweep(state) do

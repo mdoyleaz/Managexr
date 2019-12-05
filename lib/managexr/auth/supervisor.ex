@@ -1,4 +1,4 @@
-defmodule Managexr.Auth.Sessions.Supervisor do
+defmodule Managexr.Auth.Supervisor do
   use Supervisor
 
   def start_link(opts) do
@@ -7,7 +7,7 @@ defmodule Managexr.Auth.Sessions.Supervisor do
 
   def init(:ok) do
     children = [
-      Managexr.Auth.Sessions.Sweeper.SweeperServer
+      Managexr.Auth.SweeperServer
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

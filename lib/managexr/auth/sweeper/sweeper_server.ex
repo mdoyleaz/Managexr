@@ -1,7 +1,7 @@
-defmodule Managexr.Auth.Sessions.Sweeper.SweeperServer do
+defmodule Managexr.Auth.Sweeper.SweeperServer do
   use GenServer
 
-  alias Managexr.Auth.Sessions.Sweeper.Sweeper
+  alias Managexr.Auth.Sweeper.Sweeper
 
   def start_link(opts) do
     state = Enum.into(opts, %{ttl: Sweeper.get_ttl()})
