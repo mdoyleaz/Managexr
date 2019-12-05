@@ -29,8 +29,8 @@ defmodule Managexr.Auth do
         get_token(token)
         |> delete_token()
 
-      error ->
-        error
+      _ ->
+        @invalid_token
     end
   end
 
