@@ -3,6 +3,7 @@ defmodule Managexr.Auth.Authenticator do
   @seed Application.get_env(:managexr, :authenticator)[:seed]
 
   @missing_token {:error, :missing_token}
+
   def generate_token(id) do
     Phoenix.Token.sign(@secret, @seed, id, max_age: 86400)
   end

@@ -15,7 +15,12 @@ defmodule Managexr.Accounts do
 
   def get_user!(id), do: Repo.get!(User, id)
 
-  def get_user_by_email(email), do: Repo.one(from u in User, where: u.email == ^email)
+  def get_user_by_email(email) do
+    from(u in User, where: u.email == ^email,
+    select: [u.email, u.id, u.password_hash])
+    |> Repo.one()
+  end
+
 
   def create_user(attrs \\ %{}) do
     %User{}
