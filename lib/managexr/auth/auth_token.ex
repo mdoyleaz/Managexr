@@ -29,4 +29,13 @@ defmodule Managexr.Auth.AuthToken do
 
   def sweep_tokens,
     do: Repo.delete_all(from t in AuthToken, where: t.expiration < ^DateTime.utc_now())
+
+  def get_tokens_by_user(user_id) do
+    from(t in AuthToken,
+      where: t.user_id == ^user_id,
+      where: t.revoked == false,
+      select: t.token
+    )
+    |> Repo.all()
+  end
 end

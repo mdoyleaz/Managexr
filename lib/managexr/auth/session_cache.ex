@@ -1,6 +1,6 @@
 defmodule Managexr.Auth.SessionCache do
   @table :session_cache
-  def add_session(%{token: token, user: user}), do: ConCache.put(@table, token, user)
+  def add_session(%{token: token} = session), do: ConCache.put(@table, token, session)
 
   def delete_session(tokens) when is_list(tokens) do
     Enum.each(tokens, fn token -> delete_session(token) end)

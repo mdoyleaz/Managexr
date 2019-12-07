@@ -6,6 +6,7 @@ defmodule Managexr.Auth do
   alias Managexr.Accounts
   alias Managexr.Auth.AuthToken
   alias Managexr.Auth.SessionCache
+  alias Managexr.Auth.UserSession
   alias Managexr.Auth.Authenticator
 
   @invalid_token {:error, :invalid_token}
@@ -18,6 +19,8 @@ defmodule Managexr.Auth do
         {:error, :invalid_credentials}
 
       user ->
+        IO.inspect(user)
+
         Argon2.verify_pass(password, user.password_hash)
         |> store_token(user)
     end
@@ -45,8 +48,8 @@ defmodule Managexr.Auth do
     end
   end
 
-  def revoke_tokens_by_user_id(%{assigns: %{signed_user: %{id: user_id}}}) do
-    remove_revoked_tokens_from_cache(user_id)
+  def revoke_tokens_by_user_id(%{assigns: %{signed_user: %{id: user_id}}} = a) do
+    IO.inspect(a)
 
     from(t in AuthToken,
       where: t.user_id == ^user_id,
@@ -57,15 +60,6 @@ defmodule Managexr.Auth do
   end
 
   # Private Functions
-  defp remove_revoked_tokens_from_cache(user_id) do
-    from(t in AuthToken,
-      where: t.user_id == ^user_id,
-      where: t.revoked == false,
-      select: t.token
-    )
-    |> Repo.all()
-    |> SessionCache.delete_session()
-  end
 
   defp get_session(token) do
     case SessionCache.get_session(token) do
@@ -93,20 +87,12 @@ defmodule Managexr.Auth do
   end
 
   defp store_token(true, user) do
-    token = Authenticator.generate_token(%{user_id: user.id, email: user.email, role: "Admin"})
-    SessionCache.add_session(%{token: token, user: user})
+    session = UserSession.build_session(%{user_id: user.id, email: user.email})
 
-    Repo.insert(
-      Ecto.build_assoc(user, :auth_tokens, %{token: token, expiration: expiration_time()})
-    )
+    SessionCache.add_session(%{token: session.token, session: session})
+
+    Repo.insert(Ecto.build_assoc(user, :auth_tokens, session)) |> IO.inspect()
   end
 
   defp store_token(false, _), do: @invalid_token
-
-  # Session tokens expire after 21 days
-  defp expiration_time do
-    DateTime.utc_now()
-    |> DateTime.add(86400 * 21, :second)
-    |> DateTime.truncate(:second)
-  end
 end

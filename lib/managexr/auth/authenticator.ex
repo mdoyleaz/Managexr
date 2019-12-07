@@ -1,16 +1,17 @@
 defmodule Managexr.Auth.Authenticator do
-  @secret Application.get_env(:managexr, :authenticator)[:secret]
-  @seed Application.get_env(:managexr, :authenticator)[:seed]
 
   @missing_token {:error, :missing_token}
 
   def generate_token(id) do
-    Phoenix.Token.sign(@secret, @seed, id, max_age: 86400)
+    {secret, seed} = token_environment()
+    Phoenix.Token.sign(secret, seed, id, max_age: 86400)
   end
 
   def verify_token(token) do
-    case Phoenix.Token.verify(@secret, @seed, token, max_age: 86400) do
-      {:ok, _} -> {:ok, token}
+    {secret, seed} = token_environment()
+
+    case Phoenix.Token.verify(secret, seed, token, max_age: 86400) do
+      {:ok, _} -> {:ok, token} |> IO.inspect
       {:error, _} -> :error
     end
   end
@@ -36,5 +37,10 @@ defmodule Managexr.Auth.Authenticator do
       [_, match] -> {:ok, String.trim(match)}
       _ -> @missing_token
     end
+  end
+
+  defp token_environment() do
+    {Application.get_env(:managexr, :authenticator)[:secret],
+      Application.get_env(:managexr, :authenticator)[:seed]}
   end
 end
