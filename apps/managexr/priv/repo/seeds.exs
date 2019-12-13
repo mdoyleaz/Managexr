@@ -27,7 +27,7 @@ end)
 # ## Seed Default Admin User
 role = Repo.get_by(UserRole, role_name: "admin")
 
-User.changeset(%User{}, %{email: "admin@example.com", password_hash: "password", role_id: role.id})
+User.changeset(%User{}, %{email: "admin@example.com", password: "password", role_id: role.id})
 |> Repo.insert()
 
 Logger.info("Seeds complete")

@@ -2,6 +2,9 @@ defmodule Managexr.Accounts.UserRole do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Managexr.Accounts.User
+  @derive {Jason.Encoder, only: [:role_name]}
+
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "user_roles" do
     field :role_name, :string

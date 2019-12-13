@@ -24,7 +24,7 @@ defmodule ManagexrWeb.MixProject do
   def application do
     [
       mod: {ManagexrWeb.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:absinthe, :absinthe_plug, :logger, :runtime_tools]
     ]
   end
 
@@ -41,9 +41,12 @@ defmodule ManagexrWeb.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
       {:gettext, "~> 0.11"},
-      {:managexr, in_umbrella: true},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:absinthe, "~> 1.4"},
+      {:absinthe_plug, "~> 1.4"},
+      {:absinthe_ecto, "~> 0.1.3"},
+      {:managexr, in_umbrella: true}
     ]
   end
 

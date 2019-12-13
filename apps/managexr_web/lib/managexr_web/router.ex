@@ -1,6 +1,8 @@
 defmodule ManagexrWeb.Router do
   use ManagexrWeb, :router
 
+  forward "/graphql", Absinthe.Plug, schema: ManagexrWeb.Schema, json_codec: Jason
+
   pipeline :api do
     plug :accepts, ["json"]
   end
